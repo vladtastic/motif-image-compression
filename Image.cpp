@@ -1,6 +1,6 @@
 //Definitions for Image Class
 #include "Image.h"
-#include "assert.h>
+#include <assert.h>
 
 //Constructor
 Image::Image(unsigned int m, unsigned int n)
@@ -35,13 +35,51 @@ Image Image::Bite( unsigned int x, unsigned int y )
 
 		for( int m = y; m < this.WIDTH; m++ ){
 
-			tmp.push_back( image[k][m] );
+			tmp.push_back( this.intensity[k][m] );
 
 		}
 	
 		bite.push_back(tmp);
 
 	}
+
+
+	return bite;
 		
 }
 
+
+//	Outputs meet of the image
+Image Image::Meet(Image bite)
+{
+		
+	Image meet = Image();
+
+	vector<int> tmp;
+
+	for( int i=0; i < bite.HEIGHT; i++ ){
+		for( int j=0; bite.WIDTH; j++ ){
+			
+			if( this.intensity[i][j] == bite.intensity[i][j] ){
+				
+				tmp.push_back( bite.intensity[i][j] );
+			
+			}
+
+			else{
+
+				tmp.push_back( -1 );
+
+			}
+
+		}
+
+	
+		meet.push_back(tmp);
+
+	}
+
+	
+	return meet;
+
+}
