@@ -11,5 +11,4 @@ class Image
 		~Image();
 		void Read(char*);
 		Image Bite(unsigned int, unsigned int);
-		Image Meet(Image bite);
 };

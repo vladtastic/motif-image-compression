@@ -21,7 +21,7 @@ Image::~Image()
 void Image::Read(char* filename)
 {}
 
-//Outputs bite of the image
+//	Outputs bite of the image
 Image Image::Bite( unsigned int x, unsigned int y )
 {
 	assert( x > -1 );
@@ -46,40 +46,4 @@ Image Image::Bite( unsigned int x, unsigned int y )
 
 	return bite;
 		
-}
-
-
-//	Outputs meet of the image
-Image Image::Meet(Image bite)
-{
-		
-	Image meet = Image();
-
-	vector<int> tmp;
-
-	for( int i=0; i < bite.HEIGHT; i++ ){
-		for( int j=0; bite.WIDTH; j++ ){
-			
-			if( this.intensity[i][j] == bite.intensity[i][j] ){
-				
-				tmp.push_back( bite.intensity[i][j] );
-			
-			}
-
-			else{
-
-				tmp.push_back( -1 );
-
-			}
-
-		}
-
-	
-		meet.push_back(tmp);
-
-	}
-
-	
-	return meet;
-
 }
