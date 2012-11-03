@@ -3,9 +3,7 @@ class Image
 	private:
 
 	public:
-		<vector<vector<int>>> r;
-		<vector<vector<int>>> g;
-		<vector<vector<int>>> b; 
+		<vector<vector<int>>> intensity;
 		unsigned int WIDTH;
 		unsigned int HEIGHT;
 
