@@ -1,10 +1,9 @@
 class Image
 {
 	private:
-		unsigned int** r;
-		unsigned int** g;
-		unsigned int** b;
-
+		<vector<vector<int>>> r;
+		<vector<vector<int>>> g;
+		<vector<vector<int>>> b; 
 		unsigned int WIDTH;
 		unsigned int HEIGHT;
 	public:
