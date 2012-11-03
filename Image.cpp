@@ -1,9 +1,17 @@
 //Definitions for Image Class
 #include "Image.h"
+#include "assert.h>
 
 //Constructor
 Image::Image(unsigned int m, unsigned int n)
-{}
+{
+
+	unsigned int WIDTH = m;
+	unsigned int HEIGHT = n;
+
+	vector<vector<int>> intensity;
+		
+}
 
 //Destructor
 Image::~Image()
@@ -14,33 +22,26 @@ void Image::Read(char* filename)
 {}
 
 //Outputs bite of the image
-Image Image::Bite( unsigned int x, unsigned int y, unsigned image_nRow, unsigned image_nCol )
+Image Image::Bite( unsigned int x, unsigned int y )
 {
-
-	for( int i = 0; i < image_nRow; i++ ){
-		for( int j = 0; j < image_nCol; j++ ){
+	assert( x > -1 );
+	assert ( y > -1 );
 	
-			bite_colSize = image_nCol - j;
-			bite_rowSize = image_nRow - i;
-	
-	
-			bite* current_bite  = (bite*) malloc( bite_rowSize * bite_colSize * sizeof(int) );
+	Image bite = Image();
 
-			for( int k = row_pos; k < nRow; k++ ){
-				for( int m = col_pos; m < nCol; m++ ){
+	vector<int> tmp;
 
-					current_bite[ k * bite_colSize + m ] = image[ k * bite_colSize + m ];
+	for( int k = x; k < this.HEIGHT; k++ ){
 
-				}
-			}
+		for( int m = y; m < this.WIDTH; m++ ){
 
-			
-
-			//	Add this bite into the array of bites
-			
-			bite_list.push_back( current_bite );
+			tmp.push_back( image[k][m] );
 
 		}
+	
+		bite.push_back(tmp);
+
 	}
+		
 }
 
