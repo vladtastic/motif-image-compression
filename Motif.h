@@ -8,17 +8,15 @@ typedef pair<unsigned int, unsigned int> Coordinate;
 
 class Motif
 {
-	private:
+	public:
 		vector<Coordinate> Occurrences;
 
-		int** r;
-		int** g;
-		int** b;
+		vector< vector<int> > p;
 
 		unsigned int HEIGHT;
 		unsigned int WIDTH;
-	public:
-		Motif();
+		
+		Motif(const Image&, const Image&);
 		~Motif();
 		bool operator==(const Motif&);
 };
