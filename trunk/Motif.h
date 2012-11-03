@@ -16,7 +16,8 @@ class Motif
 		unsigned int HEIGHT;
 		unsigned int WIDTH;
 		
-		Motif(const Image&, const Image&);
+		Motif();
 		~Motif();
+		void Meet(const Image&, const Image&);
 		bool operator==(const Motif&);
 };
