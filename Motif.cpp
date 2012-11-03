@@ -1,8 +1,12 @@
 //Function declarations for Motif class 
 #include "Motif.h"
 
-//Constructor which takes in the main image I and bite B and performs auto-correlation
-Motif::Motif(Image& I, Image& B)
+//Constructor
+Motif::Motif()
+{}
+
+//Takes in image I and bite B and performs auto-correlation to obtain meet
+void Motif::Meet(Image& I, Image& B)
 {
 	int n_row = B.HEIGHT;
 	int n_col = B.WIDTH;
@@ -39,6 +43,7 @@ Motif::Motif(Image& I, Image& B)
 		if(solid == false)
 		{
 			p.pop_back();
+			n_row--;
 		}
 		else
 		{
@@ -46,7 +51,7 @@ Motif::Motif(Image& I, Image& B)
 		}
 	}
 	
-	//If p is not empty after these removals, we know that the meet is not a null set
+	//If p is empty after these removals, we know that the meet is a null set
 	if(p.empty())
 	{
 		this->HEIGHT = 0;
@@ -54,8 +59,75 @@ Motif::Motif(Image& I, Image& B)
 		return;
 	}
 	
+	//remove non-solid top rows
+	solid = false;
+	while(!solid)
+	{
+		vector<int> row = p.front();
+		vector<int>::iterator it;
+		for(it = row.begin(); it != row.end(); i++)
+		{
+			if(*it != -1)
+			{
+				solid = true;
+				break;
+			}
+		}
+		if(solid == false)
+		{
+			p.erase(p.begin());
+			n_row--;
+		}
+	}
 
-	
+	//remove non-empty right columns
+	solid = false;
+	while(!solid)
+	{
+		for(int i = 0; i <= n_row; i++)
+		{
+			if(p[i][n_col-1] != -1)
+			{
+				solid = true;
+				break;
+			}
+		}
+		if(solid == false)
+		{
+			vector< vector<int> >::iterator it;
+			for(it = p.begin(); it != p.end(); it++)
+			{
+				it->pop.back();
+			}
+			n_col--;
+		}
+	}
+
+	//remove non-empty left columns
+	solid = false;
+	while(!solid)
+	{
+		for(int i = 0; i <= n_row; i++)
+		{
+			if(p[i][0] != -1)
+			{
+				solid = true;
+				break;
+			}
+		}
+		if(solid == false)
+		{
+			vector< vector<int> >::iterator it;
+			for(it = p.begin(); it != p.end(); it++)
+			{
+				it->erase(it->begin());
+			}
+			n_col--;
+		}
+	}
+
+	this->HEIGHT = n_row;
+	this->WIDTH = n_col;
 }
 
 //Destructor
