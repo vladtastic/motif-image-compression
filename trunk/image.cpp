@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <cmath>
 
 
 //BITMAP FILE STRUCTURES
+#pragma pack(push,1)
 typedef struct bitmap_file_header
 {
 	uint16_t bfType; //Specifies the file type
@@ -33,93 +35,69 @@ typedef struct bitmap_core
 
 }bitmap_core;
 
+#pragma pack(pop)
+
 
 //Function to load the BITMAP file
-unsigned char  *LoadBmp(char *filename,bitmap_core *image_core_info)
+int  *LoadBmp(char *filename,bitmap_core *image_info)
 {
 	FILE *fp; //our file pointer
-	bitmap_file_header image_file_header; //our bitmap file header
-	unsigned char *Image; //store the image data
+	bitmap_file_header image_header; //our bitmap file header
+	int *Image; //store the image data
+	unsigned int *pal;
 	
 	//Open the filename in read binary mode
-	if((fp = fopen(filename,"rb")) == NULL)
+	if((fp = fopen(filename,"r")) == NULL)
         {
                 printf("Image cannot be opened!\nExiting\n");
                 exit(EXIT_FAILURE);
         }
 	
+	
+	
 	//Read the bbitmap file header
-	fread(&image_file_header,sizeof(bitmap_file_header),1,fp);
-	printf("Type %u \n",image_file_header.bfType);
-	printf("Size %u \n",image_file_header.bfSize);
-	printf("Res1 %u \n",image_file_header.bfReserved1);
-	printf("Res2 %u \n",image_file_header.bfReserved2);
-	printf("OffBits %u \n",image_file_header.bfOffBits);
+	fread(&image_header,sizeof(bitmap_file_header),1,fp);
+
+
+
 	//verify that this is a bmp file
-	if (image_file_header.bfType != 0x4D42)
+	if (image_header.bfType != 0x4d42)
 	{
 		printf("This is not a bitmap file!\n");
 		fclose(fp);
 		return NULL;
-	}	
+	}
 	
-	//Read the bitmap info header
-	fread(image_core_info,sizeof(bitmap_core),1,fp);
+	//Read in the bitmap core info
+	fread(image_info,sizeof(bitmap_core),1,fp);
 	
-	//Move the file pointer to the beginning of the data 
-	fseek(fp,image_file_header.bfOffBits,SEEK_SET);	
+	//Calculate image parameters
+	uint32_t RowSize = ((image_info->biBitCount * image_info->biWidth + 31)/32)*4;
+	uint32_t PixelArraySize = RowSize * abs(image_info->biHeight);
+
+
+	//Allocate memory for the array that will hold the pixel values
+	Image = (int * )malloc(PixelArraySize);
 	
-	//Allocate enough memory for the bitmap image data
-	Image = (unsigned char*)malloc(image_core_info->biSizeImage);
-	
-	printf("Size of image is %u \n",image_core_info->biSizeImage);
-	
-	//Verify that memory has been allocated
-	if (Image ==NULL)
+	if(Image ==NULL)
 	{
+		free (Image);
 		printf("Could not allocate memory for the image array\n");
 		fclose(fp);
 		return NULL;
 	}
-	
-	//Read in the bitmap image data
-	fread(Image,image_core_info->biSizeImage,1,fp);
-	
-	//Make sure the bitmap was read
-	if(Image==NULL)
+	//Read the pixel values into the array
+	fread(Image,PixelArraySize,1,fp);
+	//Read the palette if it exists
+	if(image_info->biBitCount <= 8)
 	{
-		fclose(fp);
-		return NULL;
+		pal = (unsigned int*)malloc(4 * pow((double)2,(double)image_info->biBitCount));
+		fread(pal,4 * pow((double)2,(double)image_info->biBitCount),1,fp);
 	}
-	
+
+	//Close the file	
 	fclose(fp);
-	
-	//Write the image back just to make sure
-	FILE *op;
-	op = fopen("new.bmp","wb");
-	fwrite(&image_file_header,sizeof(bitmap_file_header),1,op);
-	fwrite(image_core_info,sizeof(bitmap_core),1,op);
-	fseek(op,image_file_header.bfOffBits,SEEK_SET);	
-	fwrite(Image,image_core_info->biSizeImage,1,op);
-	
-	fclose(op);
-	
+
 	return Image;
 }
 
-
-
-int main(int argc ,char *argv[])
-{
-	bitmap_core image_info_header;
-	unsigned char *image;
-	char name[] = "duke.bmp";
-	image = LoadBmp(name,&image_info_header);
-	int i = 0;
-	/*while(i < 300)
-	{
-		printf("%u %u %u \n",image[i],image[i+1],image[i+2]);
-		i = i+3;
-	}*/
-	return 0;
-}
