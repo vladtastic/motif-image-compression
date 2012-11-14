@@ -47,7 +47,7 @@ int  *LoadBmp(char *filename,bitmap_core *image_info)
 	unsigned int *pal;
 	
 	//Open the filename in read binary mode
-	if((fp = fopen(filename,"r")) == NULL)
+	if((fp = fopen(filename,"rb")) == NULL)
         {
                 printf("Image cannot be opened!\nExiting\n");
                 exit(EXIT_FAILURE);
