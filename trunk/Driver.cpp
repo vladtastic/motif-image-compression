@@ -29,7 +29,7 @@ int main( int argc, char* argv[] ){
 
 	// bmp to Image object
 
-	struct bitmap_core*  core_info;
+	struct bitmap_core*  core_info = (struct bitmap_core*) malloc( sizeof(struct bitmap_core) );;
 
 	int* bitmap_ptr = LoadBmp( argv[1], core_info );
 
