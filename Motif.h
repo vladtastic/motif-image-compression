@@ -9,7 +9,7 @@ using namespace std;
 
 typedef pair<unsigned int, unsigned int> Coordinate;
 
-class Motif: public Image
+class Motif
 {
 	public:
 		vector<Coordinate> Occurrences;

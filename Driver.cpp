@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <omp.h>
+#include <queue>
 
+#include "Bitmap.h"
 #include "Image.h"
 #include "Motif.h"
 
@@ -33,19 +35,19 @@ int main( int argc, char* argv[] ){
 
 	//!!	core_info has height, are pixel array dims biWidth * biHeight?
 
-	int dimR = core_info.biHeight;
-	int dimC = core_info.biWidth;
+	int dimR = core_info->biHeight;
+	int dimC = core_info->biWidth;
 
 	Image current_img = Image( bitmap_ptr, core_info );	
 	
-	int num_bites = dimW * dimH;
+	int num_bites = dimR * dimC;
 
 	
 
 
 	//	BEGIN THREADED REGION
 
-	#pragma omp parallel private(thread_id, num_threads, chunk_size, remainder, bite_list, meet_list)
+	#pragma omp parallel
 	{
 
 		int thread_id = omp_get_thread_num();
@@ -56,8 +58,7 @@ int main( int argc, char* argv[] ){
 		queue<Image> bite_list;
 
 		#pragma omp for
-		{
-
+		
 			/*
 				An Image has mn bites
 				Each thread takes a chunk (subset)
@@ -91,7 +92,7 @@ int main( int argc, char* argv[] ){
 				}
 
 			}
-		}
+
 
 
 
@@ -105,19 +106,20 @@ int main( int argc, char* argv[] ){
 		}
 
 		#pragma omp for
-		{
 
 			for( int i = chunk_size; i > 0; i-- ){
 		
 				Motif tmp = Motif();
-				meet_list.push( tmp.Meet( &current_img, bite_list.front() ) );
+				tmp.Meet( current_img, bite_list.front() );
+				meet_list.push( tmp );
 				bite_list.pop();
 
 			}
-
-		}
 
 	}				
 
 
 
+	return 0;
+
+}
