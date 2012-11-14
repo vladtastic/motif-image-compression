@@ -6,7 +6,7 @@ using namespace std;
 
 typedef pair<unsigned int, unsigned int> Coordinate;
 
-class Motif
+class Motif: public Image
 {
 	public:
 		vector<Coordinate> Occurrences;
