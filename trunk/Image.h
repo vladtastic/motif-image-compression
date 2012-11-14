@@ -1,3 +1,6 @@
+#ifndef IMAGE_H
+#define IMAGE_H
+
 class Image
 {
 	private:
@@ -13,3 +16,6 @@ class Image
 		void Read(char*);
 		Image Bite(unsigned int, unsigned int);
 };
+
+
+#endif

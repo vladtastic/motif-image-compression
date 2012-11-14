@@ -1,3 +1,6 @@
+#ifndef MOTIF_H
+#define MOTIF_H
+
 #include "Image.h"
 #include <vector>
 #include <utility>
@@ -21,3 +24,6 @@ class Motif: public Image
 		void Meet(const Image&, const Image&);
 		bool operator==(const Motif&);
 };
+
+
+#endif
