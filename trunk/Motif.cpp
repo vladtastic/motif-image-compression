@@ -6,7 +6,7 @@ Motif::Motif()
 {}
 
 //Takes in image I and bite B and performs auto-correlation to obtain meet
-void Motif::Meet(Image& I, Image& B)
+void Motif::Meet(const Image& I, const Image& B)
 {
 	int n_row = B.HEIGHT;
 	int n_col = B.WIDTH;
@@ -32,7 +32,7 @@ void Motif::Meet(Image& I, Image& B)
 	{
 		vector<int> row = p.back();
 		vector<int>::iterator it;
-		for(it = row.begin(); it != row.end(); i++)
+		for(it = row.begin(); it != row.end(); it++)
 		{
 			if(*it != -1)
 			{
@@ -65,7 +65,7 @@ void Motif::Meet(Image& I, Image& B)
 	{
 		vector<int> row = p.front();
 		vector<int>::iterator it;
-		for(it = row.begin(); it != row.end(); i++)
+		for(it = row.begin(); it != row.end(); it++)
 		{
 			if(*it != -1)
 			{
@@ -97,7 +97,7 @@ void Motif::Meet(Image& I, Image& B)
 			vector< vector<int> >::iterator it;
 			for(it = p.begin(); it != p.end(); it++)
 			{
-				it->pop.back();
+				it->pop_back();
 			}
 			n_col--;
 		}
