@@ -8,6 +8,7 @@ class Image
 		unsigned int HEIGHT;
 
 		Image();
+		Image( int* , struct bitmap_core* );
 		~Image();
 		void Read(char*);
 		Image Bite(unsigned int, unsigned int);
