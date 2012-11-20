@@ -1,5 +1,0 @@
-#include <stdlib.h>
-int main(){
-if (NULL==0) printf("ciao\n");
-return 0;
-}
