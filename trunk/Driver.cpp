@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <omp.h>
-#include <queue>
 
 #include "Bitmap.h"
 #include "Image.h"
 #include "Motif.h"
 
+
+int* load_pixel_matrix( char*, struct bitmap_core* );
 
 int main( int argc, char* argv[] ){
 
@@ -31,95 +31,77 @@ int main( int argc, char* argv[] ){
 
 	struct bitmap_core*  core_info = (struct bitmap_core*) malloc( sizeof(struct bitmap_core) );;
 
+		
+		
 	int* bitmap_ptr = LoadBmp( argv[1], core_info );
+	free(bitmap_ptr);
 
-	//!!	core_info has height, are pixel array dims biWidth * biHeight?
+	//	LOADBMP RETURNS INCORRECT PIXEL MATRIX
+	//	LOAD_PIXEL_MATRIX USED AS SUBSTITUTION
+	//	LOADBMP USED TO FIND IMAGE DIMENSIONS
 
 	int dimR = core_info->biHeight;
 	int dimC = core_info->biWidth;
 
-	Image current_img = Image( bitmap_ptr, core_info );	
+	int* pixel_array  = load_pixel_matrix( "thresholdpixelmatrix.txt", core_info );
+	
+	if( pixel_array == NULL ){
+
+		printf("Error loading pixel array!\n");
+		return 1;
+
+	}
+
+	Image current_img = Image( pixel_array, core_info );	
 	
 	int num_bites = dimR * dimC;
 
 	
 
 
-	//	BEGIN THREADED REGION
-
-	#pragma omp parallel
-	{
-
-		int thread_id = omp_get_thread_num();
-		int num_threads = omp_get_num_threads();
-		int chunk_size = num_bites / num_threads;
-		int remainder = num_bites % num_threads;
-
-		queue<Image> bite_list;
-
-		#pragma omp for
-		
-			/*
-				An Image has mn bites
-				Each thread takes a chunk (subset)
-				Each thread gets coords of each bite in subset
-				Adds bite to its personal queue			
-			*/
-					
-			
-			for( int i = thread_id * chunk_size; i < (thread_id + 1 ) * chunk_size; i++ ){
-
-				int pos_row = i % dimR;
-				int pos_col = i % dimC;
-
-				bite_list.push( current_img.Bite( pos_row, pos_col ) );
-
-			}
-
-
-			
-			// Last thread takes the leftovers
-	
-			if( thread_id == num_threads - 1 ){
-				
-				for( int i = (thread_id + 1 ) * chunk_size; i < ((thread_id + 1) * chunk_size) + remainder; i++ ){
-
-					int pos_row = i % dimR;
-					int pos_col = i % dimC;
-
-					bite_list.push( current_img.Bite( pos_row, pos_col ) );
-				
-				}
-
-			}
-
-
-
-
-		// Each thread has a subset of autocorrelations
-		queue<Motif> meet_list;
-
-		if( thread_id == num_threads - 1 ){
-			
-			chunk_size = chunk_size + remainder;
-		
-		}
-
-		#pragma omp for
-
-			for( int i = chunk_size; i > 0; i-- ){
-		
-				Motif tmp = Motif();
-				tmp.Meet( current_img, bite_list.front() );
-				meet_list.push( tmp );
-				bite_list.pop();
-
-			}
-
-	}				
 
 
 
 	return 0;
+
+}
+
+
+int* load_pixel_matrix( char* filename, struct bitmap_core* bmpc ){
+
+	FILE *fp;
+
+	fp  = fopen(filename, "r" );
+
+	if( fp == NULL ){
+
+		printf("Error opening pixel matrix file!\n");
+		return (int*) NULL;
+
+	}
+
+	int* pixel_array = (int*) malloc( bmpc->biHeight * bmpc->biWidth * sizeof( int) );
+
+	if( pixel_array == NULL ){
+
+		printf("Error Allocating pixel value matrix!\n");
+		return (int*) NULL;
+
+	}
+
+	for( int i = 0; i<bmpc->biHeight; i++){
+		for( int j=0; j<bmpc->biWidth; j++){
+
+			fscanf(fp, "%d\t", &(pixel_array[ i * bmpc->biWidth + j ]) );
+
+		}
+
+	}
+
+	
+	fclose(fp);
+
+
+	return pixel_array;
 
 }
