@@ -31,7 +31,32 @@ void Motif::Meet(const Image& I, const Image& B)
 
 	//Convert to meet
 	//Remove rows from bottom
-	bool solid = false;
+
+	int vec_length = p.size();
+
+	// BEGIN OMP REGIONS
+	
+	#pragma omp parallel
+	{
+		int num_threads = omp_get_num_threads();
+		int thread_id = omp_get_thread_num();
+
+		int chunk_size = vec_length / num_threads;
+		int remainder = vec_length % num_threads;
+
+		bool solid = false;
+
+		#pragma omp for
+		{
+
+			for( int i = (thread_id * chunk_size) + 1; i < ( (thread_id + 1) * chunk_size ) + 1; i++ ){
+		
+				if( 
+		
+			
+		
+
+
 	while (!p.empty())
 	{
 		vector<int> row = p.back();

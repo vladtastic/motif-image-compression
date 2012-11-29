@@ -1,14 +1,15 @@
 //Definitions for Image Class
-#include "Image.h"
-#include "Bitmap.h"
+#include <stdio.h>
 #include <assert.h>
+#include "Bitmap.h"
+#include "Image.h"
 
 //Constructor
 Image::Image(unsigned int m, unsigned int n)
 {
 
-	unsigned int WIDTH = m;
-	unsigned int HEIGHT = n;
+	WIDTH = m;
+	HEIGHT = n;
 
 	vector< vector<int> > p;
 		
@@ -36,23 +37,20 @@ Image::Image( int* pix_val, struct bitmap_core* bcore ){
 
 	vector<int> tmp;
 
-	unsigned int WIDTH = dimW;
-	unsigned int HEIGHT = dimH;
+	this->WIDTH = dimW;
+	this->HEIGHT = dimH;
 
-	vector< vector<int> > p;
-	
 	for( int i=0; i<dimH; i++){
 		for( int j=0; j<dimW; j++){
 
 			tmp.push_back( pix_val[i*dimW + j] );
 		}
 
-		p.push_back(tmp);
+		this->p.push_back(tmp);
 
 		tmp.clear();
 
 	}
-	
 
 }
 
@@ -62,15 +60,18 @@ Image::Image( int* pix_val, struct bitmap_core* bcore ){
 Image Image::Bite( unsigned int x, unsigned int y )
 {
 	assert( x > -1 );
-	assert ( y > -1 );
+	assert( y > -1 );
 	
 	vector<int> tmp;
 
-	Image bite = Image();
+	unsigned int bite_width = this->WIDTH -  x;
+	unsigned int bite_height = this->HEIGHT - y;
 
-	for( int k = x; k < this->HEIGHT; k++ ){
+	Image bite = Image(bite_width, bite_height);
 
-		for( int m = y; m < this->WIDTH; m++ ){
+	for( unsigned int k = y; k < this->HEIGHT; k++ ){
+
+		for( unsigned int m = x; m < this->WIDTH; m++ ){
 
 			tmp.push_back( this->p[k][m] );
 
@@ -84,4 +85,16 @@ Image Image::Bite( unsigned int x, unsigned int y )
 
 	return bite;
 		
+}
+
+unsigned int Image::gHeight(){
+	
+	return this->HEIGHT;
+
+}
+
+unsigned int Image::gWidth(){
+
+	return this->WIDTH;
+
 }
