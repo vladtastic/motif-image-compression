@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <queue>
 
 #include "Bitmap.h"
 #include "Image.h"
@@ -52,13 +53,29 @@ int main( int argc, char* argv[] ){
 
 	}
 
-	Image current_img = Image( pixel_array, core_info );	
+	Image current_image = Image( pixel_array, core_info );	
 	
 	int num_bites = dimR * dimC;
 
-	
+	queue<Motif> auto_list;		// init to be some maximum size
+
+	for( int i = 0; i < dimR; i++ ){
+
+		for( int j = 0; j < dimC; j++ ){
+
+			Image current_bite = current_image.Bite( (unsigned int) j, (unsigned int) i );	// how does this function work?
+													// Also, on next loop iter, does it clear mem from prev var?
+			Motif current_meet = current_image.Meet( const &current_image, const &current_bite ); // this is autocor													//	this is autocor...
+
+			//	Hash current_meet and add to auto_list
+			auto_list.insert( current_meet, #!HASHVALUE!# );
+
+		}
+
+	}
 
 
+	// Decompose any maximal motifs...
 
 
 
