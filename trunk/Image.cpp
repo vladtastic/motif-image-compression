@@ -1,6 +1,8 @@
 //Definitions for Image Class
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
+
 #include "Bitmap.h"
 #include "Image.h"
 
@@ -59,9 +61,6 @@ Image::Image( int* pix_val, struct bitmap_core* bcore ){
 //	Outputs bite of the image
 Image Image::Bite( unsigned int x, unsigned int y )
 {
-	assert( x > -1 );
-	assert( y > -1 );
-	
 	vector<int> tmp;
 
 	unsigned int bite_width = this->WIDTH -  x;
@@ -98,3 +97,5 @@ unsigned int Image::gWidth(){
 	return this->WIDTH;
 
 }
+
+
