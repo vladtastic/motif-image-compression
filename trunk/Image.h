@@ -21,6 +21,9 @@ class Image
 		~Image();
 		void Read(char*);
 		Image Bite(unsigned int, unsigned int);
+		unsigned int gHeight();
+		unsigned int gWidth();
+
 };
 
 
