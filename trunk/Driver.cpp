@@ -1,14 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <queue>
 #include <map>
+#include <fstream>
 
 #include "Bitmap.h"
 #include "Image.h"
 #include "Motif.h"
 
 int* load_pixel_matrix( char*, struct bitmap_core* );
+//int save_motifs( vector< Motif >* motif_save_list, int index );
 
 int main( int argc, char* argv[] ){
 
@@ -16,17 +17,13 @@ int main( int argc, char* argv[] ){
 	int err = 0;
 
 	
-	if( argc < 2 ){
+	if( argc < 2 || (argv[1] == NULL ) ){
 		
 		printf("Usage: executable /path/to/image \n" );
 		return 0;
 
 	}
 	
-
-	assert( argv[1] != NULL );
-
-
 
 	// bmp to Image object
 
@@ -57,6 +54,7 @@ int main( int argc, char* argv[] ){
 	
 	int num_bites = dimR * dimC;
 
+	vector< Motif > motif_save_list;
 	map< string, vector<struct coords> > motif_hash_list; 
 
 	for( int i = 0; i < dimR; i++ ){
@@ -75,13 +73,21 @@ int main( int argc, char* argv[] ){
 			//	Add autoc to a list for writing/saving
 			
 			motif_hash_list[ current_autoc.string_representation() ] = current_autoc.occurrences;
+			
 
 
+		/***************
+			
+			motif_save_list.push_back( current_autoc );
+			
 			if( ( i * dimC + j ) % 100 == 0 ){
 
 				// Write data to disk
 
 			}
+
+		****************/
+		
 
 		}
 
@@ -135,3 +141,72 @@ int* load_pixel_matrix( char* filename, struct bitmap_core* bmpc ){
 	return pixel_array;
 
 }
+
+
+/*
+int save_motifs( vector< Motif >* motif_save_list, int index ){
+
+	string fname = "batch.";
+	string batch_number;
+	ostringstream ss(batch_number);
+
+	ss << index;
+
+	ss.clear();
+
+	fname.append(batch_number);
+
+	ofstream fp( fname.c_str(), ios::out || ios::binary );
+
+	if( !fp.is_open() ){
+
+		return 1;
+
+	}
+
+	if( fp.is_open() ){
+	
+		while( motif_save_list->empty() != true ){
+
+			Motif temp_motif = motif_save_list.pop_back();
+			unsigned int dimW = temp_motif.WIDTH;
+			unsigned int dimH = temp_motif.HEIGHT:
+			unsigned int numOccur = temp_motif.occurrences.size();
+
+			fp << "#D";
+			fp << temp_motif.WIDTH << "\t" << temp_motif.HEIGHT << "\n";
+		
+		
+			fp << "#P" << "\n";
+		
+			for( unsigned int i = 0; i < dimH; i++ ){
+
+				for( unsigned int j = 0; j < dimW; j++ ){
+
+					fp << temp_motif.p[i][j] << " ";
+
+				}
+
+			}
+
+		
+			fp << "#O" << "\n";
+
+			for( unsigned int i = 0; i < numOccur; i++ ){
+
+				fp << temp_motif.occurrences[i] << " ";
+
+			}
+
+			fp << "\n";
+
+		}
+
+	}
+
+	fp.close();		
+
+	return 0;
+
+}
+*/
