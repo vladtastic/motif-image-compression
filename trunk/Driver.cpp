@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <queue>
+#include <map>
 
 #include "Bitmap.h"
 #include "Image.h"
 #include "Motif.h"
-
 
 int* load_pixel_matrix( char*, struct bitmap_core* );
 
@@ -44,7 +44,7 @@ int main( int argc, char* argv[] ){
 	int dimR = core_info->biHeight;
 	int dimC = core_info->biWidth;
 
-	int* pixel_array  = load_pixel_matrix( "thresholdpixelmatrix.txt", core_info );
+	int* pixel_array  = load_pixel_matrix( "thresholdpixelmatrix.txt" , core_info );
 	
 	if( pixel_array == NULL ){
 
@@ -57,7 +57,7 @@ int main( int argc, char* argv[] ){
 	
 	int num_bites = dimR * dimC;
 
-	queue<Motif> auto_list;		// init to be some maximum size
+	map< string, vector<struct coords> > motif_hash_list; 
 
 	for( int i = 0; i < dimR; i++ ){
 
@@ -65,10 +65,23 @@ int main( int argc, char* argv[] ){
 
 			Image current_bite = current_image.Bite( (unsigned int) j, (unsigned int) i );	// how does this function work?
 													// Also, on next loop iter, does it clear mem from prev var?
-			Motif current_meet = current_image.Meet( const &current_image, const &current_bite ); // this is autocor													//	this is autocor...
 
-			//	Hash current_meet and add to auto_list
-			auto_list.insert( current_meet, #!HASHVALUE!# );
+			Motif current_autoc = Motif();
+
+			current_autoc.Meet( current_image, current_bite ); // this is autocor													//	This should return the AUTOCORRELATION
+
+
+			//	Hash current_autoc
+			//	Add autoc to a list for writing/saving
+			
+			motif_hash_list[ current_autoc.string_representation() ] = current_autoc.occurrences;
+
+
+			if( ( i * dimC + j ) % 100 == 0 ){
+
+				// Write data to disk
+
+			}
 
 		}
 
