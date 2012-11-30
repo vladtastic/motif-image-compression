@@ -4,15 +4,23 @@
 #include "Image.h"
 #include <vector>
 #include <utility>
+#include <string>
+#include <sstream>
+
 
 using namespace std;
 
-typedef pair<unsigned int, unsigned int> Coordinate;
+struct coords{
+	
+	unsigned int x;
+	unsigned int y;
+
+};
 
 class Motif
 {
 	public:
-		vector<Coordinate> Occurrences;
+		vector<struct coords> occurrences;
 
 		vector< vector<int> > p;
 
@@ -20,10 +28,14 @@ class Motif
 		unsigned int WIDTH;
 		
 		Motif();
+		Motif( unsigned int x, unsigned int y );
 		~Motif();
 		void Meet(const Image&, const Image&);
 		bool operator==(const Motif&);
+		bool operator<(const Motif&);
+		string string_representation();
 };
+	
 
 
 #endif

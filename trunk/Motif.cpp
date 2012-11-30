@@ -1,9 +1,36 @@
 //Function declarations for Motif class 
 #include "Motif.h"
+#include <string>
+#include <sstream>
+
+
 
 //Constructor
 Motif::Motif()
-{}
+{
+	HEIGHT = 0;
+	WIDTH = 0;
+
+}
+
+Motif::Motif( unsigned int x, unsigned int y )		// x , y are the WIDTH and HEIGHT of the Motif respectively
+{
+
+	if( x > (unsigned int) 0 ){
+
+		WIDTH = x;
+
+	}
+
+
+	if( y > (unsigned int) 0 ){
+
+		HEIGHT = y;
+
+	}
+
+}
+	
 
 //Takes in image I and bite B and performs auto-correlation to obtain meet
 void Motif::Meet(const Image& I, const Image& B)
@@ -134,6 +161,134 @@ void Motif::Meet(const Image& I, const Image& B)
 Motif::~Motif()
 {}
 
-//Comparison to remove duplicates
+//Overload equality operator
 bool Motif::operator==(const Motif& other)
-{}
+{
+
+	int arg1_dimH = this->HEIGHT;
+	int arg1_dimW = this->WIDTH;
+	int arg1_size = arg1_dimW * arg1_dimH;
+
+	int arg2_dimH = other.HEIGHT;
+	int arg2_dimW = other.WIDTH;
+	int arg2_size = arg2_dimW * arg2_dimH;
+
+	if( arg1_size == arg2_size ){
+
+		// Check value by value
+		for( int i = 0; i < arg1_dimH; i++){
+			for( int j = 0; j < arg1_dimW; j++ ){
+
+				if( this->p[i][j] != other.p[i][j] ){
+
+					return false;
+
+				}
+
+			}
+
+		}
+
+		return true;
+	}
+
+	else{
+
+		return false;
+
+	}
+}
+
+
+//Overload less than operator
+bool Motif::operator<(const Motif& other)
+{
+
+	unsigned int arg1_dimH = this->HEIGHT;
+	unsigned int arg1_dimW = this->WIDTH;
+	unsigned int arg1_size = arg1_dimW * arg1_dimH;
+
+	unsigned int arg2_dimH = other.HEIGHT;
+	unsigned int arg2_dimW = other.WIDTH;
+	unsigned int arg2_size = arg2_dimW * arg2_dimH;
+
+	if( arg1_size < arg2_size ){
+
+
+		return true;
+
+	}
+
+	if( arg1_size > arg2_size ){
+
+		return false;
+
+	}
+
+	else{
+		// Motifs are same size
+		// Check value by value
+		for( unsigned int i = 0; i < arg1_dimH; i++){
+			for( unsigned int j = 0; j < arg1_dimW; j++ ){
+
+				if( this->p[i][j] > other.p[i][j] ){
+
+					return false;
+
+				}
+
+			}
+
+		}
+
+
+		// arg1 < arg2 OR arg1 == arg2
+
+		bool check;
+
+		check = *(this)==other;
+
+		if( check == true ){
+
+			return false;
+		
+		}
+
+		else{
+
+			return true;
+
+		}
+	}
+
+
+}
+
+
+string Motif::string_representation(){
+
+	unsigned int dimW = this->WIDTH;
+	unsigned int dimH = this->HEIGHT;
+
+	string temp;
+	ostringstream ss(temp);
+	string stringrep = "";
+
+	for( unsigned int i = 0; i < dimH; i++ ){
+
+		for( unsigned int j = 0; j < dimW; j++ ){
+
+			ss << this->p[i][j];
+
+			stringrep.append(temp);
+
+			ss.clear();
+
+
+		}
+
+	}
+
+	return stringrep;
+
+}
