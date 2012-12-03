@@ -48,9 +48,9 @@ uint8_t  *LoadBmp(char *filename,bitmap_core *image_info)
 	
 	//Calculate image parameters
 	uint32_t RowSize = ((image_info->biBitCount * image_info->biWidth + 31)/32)*4;
-	std::cout << "RowSize = " << RowSize << std::endl; 
+	
 	uint32_t PixelArraySize = RowSize * abs(image_info->biHeight);
-	std::cout << "PixelArraySize = " << PixelArraySize << std::endl; 
+	 
 
 
 	//Allocate memory for the array that will hold the pixel values
@@ -66,15 +66,19 @@ uint8_t  *LoadBmp(char *filename,bitmap_core *image_info)
 		return NULL;
 	}
 	//Read the pixel values into the array
+
+	fseek(fp , image_header.bfOffBits , SEEK_SET);	
+	
 	//First check how many padded bytes there are
 	int numPadded = width % 4; //Each row is packed on a 4 byte boundary
-	std::cout << "Number of bytes padded = " << numPadded << std::endl;
+	
 	for(int i = 0 ; i < height ; i++)
 	{
 		for(int j = 0; j < width ; j++)
 		{
 			uint8_t p;
 			fread(&p , 1 , 1 , fp);
+			p = p >> 1; //Right shift by one bit to make it into a 7bit pixel depth. So that the 8th bit can be used for don't care
 			int inverted = (height - 1) - i;
 			Image[inverted * width + j] = p;
 			

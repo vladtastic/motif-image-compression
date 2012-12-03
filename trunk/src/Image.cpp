@@ -1,9 +1,4 @@
 //Definitions for Image Class
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-
-#include "Bitmap.h"
 #include "Image.h"
 
 //Constructor
@@ -13,7 +8,7 @@ Image::Image(unsigned int m, unsigned int n)
 	WIDTH = m;
 	HEIGHT = n;
 
-	vector< vector<int> > p;
+	p = (uint8_t *) malloc(m * n * sizeof(uint8_t));
 		
 }
 
@@ -21,38 +16,14 @@ Image::Image(unsigned int m, unsigned int n)
 Image::~Image()
 {}
 
-//Reads and initializes image with the given file name
-void Image::Read(char* filename)
-{}
 
 //Takes in array of pixel values, outputs corresponding Image object
-Image::Image( int* pix_val, struct bitmap_core* bcore ){
+Image::Image(char* filename){
 
-	assert( pix_val != 0);
-	assert( bcore != 0);	
-
-	int dimW = bcore->biWidth;
-	int dimH = bcore->biHeight;
-
-	assert( dimW > 0 );
-	assert( dimH > 0 );
-
-	vector<int> tmp;
-
-	this->WIDTH = dimW;
-	this->HEIGHT = dimH;
-
-	for( int i=0; i<dimH; i++){
-		for( int j=0; j<dimW; j++){
-
-			tmp.push_back( pix_val[i*dimW + j] );
-		}
-
-		this->p.push_back(tmp);
-
-		tmp.clear();
-
-	}
+	p = LoadBmp(filename, &image_info);
+	
+	WIDTH = image_info.biWidth;
+	HEIGHT = image_info.biHeight;
 
 }
 
@@ -61,7 +32,7 @@ Image::Image( int* pix_val, struct bitmap_core* bcore ){
 //	Outputs bite of the image
 Image Image::Bite( unsigned int x, unsigned int y )
 {
-	vector<int> tmp;
+	/*vector<int> tmp;
 
 	unsigned int bite_width = this->WIDTH -  x;
 	unsigned int bite_height = this->HEIGHT - y;
@@ -82,7 +53,7 @@ Image Image::Bite( unsigned int x, unsigned int y )
 	}
 
 
-	return bite;
+	return bite;*/
 		
 }
 
