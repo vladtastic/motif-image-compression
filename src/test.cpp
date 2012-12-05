@@ -23,10 +23,8 @@ void get_auto(Image &I)
 			//cout << "\n Generating bite" << endl;
 			uint8_t* bite = (uint8_t *)malloc((I.HEIGHT-y)*(I.WIDTH-x));
 			uint8_t* consensus = (uint8_t *)malloc((I.HEIGHT-y)*(I.WIDTH-x));
-			#pragma omp parallel shared(bite, consensus, pix)
-			{
+			
 
-			#pragma omp for
 			for(int i = y ; i < I.HEIGHT ; i++)
 			{
 				for(int j = x ; j < I.WIDTH ; j++)
@@ -37,8 +35,6 @@ void get_auto(Image &I)
 			//Calculate the consensus between the bite and the image
 			//cout << "\n Calculating Auto correlation\n\n";
 
-
-			#pragma omp for
 			for(int i = 0 ; i < I.HEIGHT - y ; i++)
 			{
 				for(int j = 0; j < I.WIDTH - x ; j++)
@@ -56,7 +52,7 @@ void get_auto(Image &I)
 
 			}
 
-			} //end parallel region
+			 //end parallel region
 	
 			free( consensus );
 			free( bite );
