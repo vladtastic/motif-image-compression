@@ -1,5 +1,6 @@
 //Definitions for Image Class
 #include <malloc.h>
+#include "hpcdefs.hpp"
 #include "Image.h"
 
 
@@ -9,12 +10,14 @@ Image::Image(unsigned int m, unsigned int n)
 
 	WIDTH = m;
 	HEIGHT = n;
-	p = (uint8_t *)malloc(m * n * sizeof(uint8_t));	
+	p = (uint8_t *)aligned_alloc(m * n * sizeof(uint8_t),32);	
 }
 
 //Destructor
 Image::~Image()
-{}
+{
+  aligned_free(p);
+}
 
 
 //Takes in array of pixel values, outputs corresponding Image object
