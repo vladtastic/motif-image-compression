@@ -16,7 +16,7 @@ class Image
 	private:
 
 	public:
-		uint8_t** p;
+		uint8_t* p;
 		unsigned int WIDTH;
 		unsigned int HEIGHT;
 		bitmap_core image_info;

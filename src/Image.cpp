@@ -9,14 +9,7 @@ Image::Image(unsigned int m, unsigned int n)
 
 	WIDTH = m;
 	HEIGHT = n;
-
-	p = (uint8_t **) malloc(m * sizeof(uint8_t*));
-	for(int i = 0 ; i < HEIGHT ; i++)
-	{
-		//Allocate space for the row
-		p[i] = (uint8_t *)memalign(16,n * sizeof(uint8_t));
-	}
-		
+	p = (uint8_t *)malloc(m * n * sizeof(uint8_t));	
 }
 
 //Destructor
@@ -27,26 +20,10 @@ Image::~Image()
 //Takes in array of pixel values, outputs corresponding Image object
 Image::Image(char* filename){
 
-	uint8_t *raw = LoadBmp(filename, &image_info);
+	p = LoadBmp(filename, &image_info);
 	
 	WIDTH = image_info.biWidth;
 	HEIGHT = image_info.biHeight;
-	
-	p = (uint8_t **) malloc(HEIGHT * sizeof(uint8_t*));
-	
-	//fill in the image
-	for(int i = 0 ; i < HEIGHT ; i++)
-	{
-		//Allocate space for the row
-		p[i] = (uint8_t *)memalign(16,WIDTH * sizeof(uint8_t));
-		
-		for(int j = 0 ; j < WIDTH ; j++)
-		{
-			p[i][j] = raw[i * WIDTH + j];
-		}
-	}
-	
-	free(raw);
 
 }
 
