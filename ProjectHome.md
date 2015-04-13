@@ -1,0 +1,1 @@
+Parallel Implementation of a 2D Motif Based Image Compression
